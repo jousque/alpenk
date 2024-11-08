@@ -1,6 +1,6 @@
 <template>
     <div>
-        Home
+        Home 2
         <div v-for="item in data" :key="item.id">
             {{ item.name }}
         </div>
