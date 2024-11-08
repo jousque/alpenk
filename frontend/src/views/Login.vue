@@ -52,10 +52,10 @@
                               <div class="relative mb-5">
                                   <input
                                       class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-transparent text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                                      type="email" placeholder="Email" v-model="email" id="email" required />
-                                  <label for="email"
+                                      type="text" placeholder="Kullanıcı Adı" v-model="username" id="username" required />
+                                  <label for="username"
                                       class="absolute left-8 top-4 text-gray-500 text-sm transition-all duration-300 ease-in-out"
-                                      :class="{ 'transform -translate-y-7 scale-75 text-indigo-500': email || emailFocused }">Email</label>
+                                      :class="{ 'transform -translate-y-7 scale-75 text-indigo-500': username || emailFocused }">Email</label>
                               </div>
 
                               <div class="relative mb-5">
@@ -100,8 +100,8 @@ import { useToast } from "primevue/usetoast";
 const toast = useToast();
 const router = useRouter();
 
-const email = ref('iletisim@angaryos.com');
-const password = ref('iletisim@angaryos.comAa.');
+const username = ref('burak');
+const password = ref('123456');
 const emailFocused = ref(false);
 const passwordFocused = ref(false);
 const isLoading = ref(false);
@@ -109,42 +109,18 @@ const isLoading = ref(false);
 const login = () => {
   isLoading.value = true;
 
-  function getClientInfo() {
-const userAgent = navigator.userAgent;
-
-let type = 'browser';
-if (/Mobi|Android/i.test(userAgent)) {
-  type = 'mobile';
-} else if (/Tablet|iPad/i.test(userAgent)) {
-  type = 'tablet';
-} else {
-  type = 'browser';
-}
-
-return {
-  type,
-  agent: userAgent,
-  firebaseToken: ""
-};
-}
-
   const loginData = {
-      clientInfo: getClientInfo(),
-      email: email.value,
+      username: username.value,
       password: password.value,
   };
 
   store.dispatch('authLogin', loginData)
       .then((res) => {
-          if (res && res.code === 200) {
               toast.add({ severity: 'success', summary: 'Başarılı', detail: 'Giriş başarılı, yönlendiriliyorsunuz...', life: 3000 });
               setTimeout(() => {
-                  localStorage.setItem('auth', res.data.token);
+                  localStorage.setItem('auth', res.token);
                   router.push({ name: 'Home' });
               }, 100);
-          } else {
-              toast.add({ severity: 'error', summary: 'Hata', detail: 'Kullanıcı adı veya şifre hatalı', life: 3000 });
-          }
       })
       .catch((err) => {
           if (err.response && err.response.data) {

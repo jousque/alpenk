@@ -7,39 +7,18 @@ import { useToastService } from '@/plugins/useToaster';
 const { showToast } = useToastService();
 // { withCredentials: true }
 const getAllResources = async (tableName, data = {}) => {
-    const defaultData = {
-        page: 1,
-        limit: "10",
-        column_array_id: store.getters.getUserData.auths.tables[tableName].lists[0],
-        column_array_id_query: store.getters.getUserData.auths.tables[tableName].queries[0],
-        sorts: {},
-        filters: {},
-        editMode: false,
-        liveDataMode: false,
-        columnNames: [],
-        groupBy: [],
-        filterColumnNames: [],
-    };
+    const response = await axios({
+        method: 'GET',
+        url: "/" + tableName,
+        headers: {
+            Authorization: `Bearer ${store.getters.getToken}`
+        },
+        params: data
+    });
 
-    const finalData = { ...defaultData, ...data };
+    return response.data;
+};
 
-    try {
-        const response = await axios.post(
-            `${store.getters.getToken}/tables/${tableName}`,
-            {
-                params: JSON.stringify(finalData),
-            }
-        );
-
-        return response.data;
-    } catch (error) {
-        if (error.response.status === 401) {
-            store.dispatch("authLogout");
-            router.push({ name: "Login" });
-        }
-        throw error;
-    }
-}
 
 const getResourceById = async (tableName, id) => {
     data["column_set_id"] = store.getters.getUserData.auths.tables[tableName].shows[0]

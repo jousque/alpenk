@@ -16,9 +16,12 @@ const routes = [
         component: () => import('@/views/Home.vue'),
         meta: { requiresAuth: true, breadcrumb: 'Dashboard', breadcrumbParent: 'Genel' }
       },
-      /**
-       * Kategoriler
-       */
+      {
+        path: '/customers',
+        name: 'Customers',
+        component: () => import('@/views/customers/Customers.vue'),
+        meta: { requiresAuth: true, breadcrumb: 'Customers', breadcrumbParent: 'Genel' }
+      },
     ]
   },
   {
@@ -65,7 +68,6 @@ router.beforeEach(async (to, from, next) => {
         next();
       } else {
         try {
-          await store.dispatch('userDataAPI');
           store.commit('setIsUserDataLoaded', true);
           localStorage.setItem('isUserDataLoaded', 'true');
           next();
